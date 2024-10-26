@@ -8,6 +8,14 @@ class CreateTransformationReport:
         
         self.country_transformations_path = country_transformations_path
 
+        # TODO: PFLO also belongs to energy, we need to fix this
+        self.spp_sectors = {
+             'AFOLU': ['AGRC', 'LVST', 'LNDU', 'LSMM', 'SOIL'],
+             'CircularEconomy': ['WALI', 'WASO'],
+             'Energy': ['TRNS', 'INEN', 'SCOE', 'TRDE', 'ENTC', 'FGTV', 'CCSQ'],
+             'IPPU': ['IPPU', 'TRWW', 'PFLO']
+        }
+
     def get_yaml_names(self):
             file_names = os.listdir(self.country_transformations_path)
             yaml_file_names = [i for i in file_names if i.startswith('transformation')]
@@ -48,6 +56,8 @@ class CreateTransformationReport:
              transformations_metadata[file_name] = self.get_data_from_yaml(file_name)
         # print(transformations_metadata)
         return transformations_metadata
+        
+         
     
     def generate_report(self):
 
@@ -55,4 +65,19 @@ class CreateTransformationReport:
         transformations_metadata = self.get_transformations_metadata()
 
         df = pd.DataFrame.from_dict(transformations_metadata, orient='index').reset_index(drop=True)
+
+        # Eliminate the Default value prefix from the transformation_name column
+        df['transformation_name'] = df['transformation_name'].str.replace(r'^Default Value - [A-Z]+: ', '', regex=True)
+        
+        # generate the subsector column
+        df['subsector'] = df.transformation_code.apply(lambda x: x.split(':')[1])
+
+        # generate the sector column
+
+        # Create the reverse mapping dictionary
+        subsector_to_sector = {subsector: sector for sector, subsectors in self.spp_sectors.items() for subsector in subsectors}
+
+        # Map the 'subsectors' column to 'sectores' using the reverse mapping
+        df['sectors'] = df['subsector'].map(subsector_to_sector)
+
         return df
