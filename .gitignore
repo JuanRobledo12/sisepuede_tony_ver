@@ -163,4 +163,4 @@ desktop.ini
 .pyre/
 
 #ignore country profiles directory
-sisepuede/country_profiles
+sisepuede/country_profiles/iran/iran_transformations
