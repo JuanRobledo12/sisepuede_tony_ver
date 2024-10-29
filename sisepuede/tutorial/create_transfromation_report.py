@@ -13,7 +13,8 @@ class CreateTransformationReport:
              'AFOLU': ['AGRC', 'LVST', 'LNDU', 'LSMM', 'SOIL'],
              'CircularEconomy': ['WALI', 'WASO'],
              'Energy': ['TRNS', 'INEN', 'SCOE', 'TRDE', 'ENTC', 'FGTV', 'CCSQ'],
-             'IPPU': ['IPPU', 'TRWW', 'PFLO']
+             'IPPU': ['IPPU', 'TRWW']
+             'All Sectors': ['PFLO']
         }
 
     def get_yaml_names(self):
